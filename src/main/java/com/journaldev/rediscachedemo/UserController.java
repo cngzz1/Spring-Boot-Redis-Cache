@@ -8,10 +8,12 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 public class UserController {
 
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final UserRepository userRepository;
 
@@ -21,10 +23,10 @@ public class UserController {
     }
 
     @Cacheable(value = "users", key = "#userId", unless = "#result.followers < 12000")
-    @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
-    public User getUser(@PathVariable String userId) {
-        LOG.info("Getting user with ID {}.", userId);
-        return userRepository.findOne(Long.valueOf(userId));
+    @GetMapping(value = "/{userId}")
+    public Optional<User> getUser(@PathVariable Long userId) {
+        logger.info("Getting user with ID {}.", userId);
+        return userRepository.findById(userId);
     }
 
     @CachePut(value = "users", key = "#user.id")
@@ -36,8 +38,8 @@ public class UserController {
 
     @CacheEvict(value = "users", allEntries=true)
     @DeleteMapping("/{userId}")
-    public void deleteUserByID(@PathVariable Long userId) {
-        LOG.info("deleting person with id {}", userId);
-        userRepository.delete(userId);
+    public void deleteUserByID(@PathVariable User user) {
+        logger.info("deleting person with id {}", user.getId());
+        userRepository.delete(user);
     }
 }

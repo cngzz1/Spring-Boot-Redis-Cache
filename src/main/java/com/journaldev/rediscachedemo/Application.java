@@ -12,7 +12,7 @@ import org.springframework.cache.annotation.EnableCaching;
 @EnableCaching
 public class Application implements CommandLineRunner {
 
-	private final Logger LOG = LoggerFactory.getLogger(getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	private final UserRepository userRepository;
 
@@ -29,7 +29,7 @@ public class Application implements CommandLineRunner {
 	public void run(String... strings) {
 
 		//Populating embedded database here
-		LOG.info("Saving users. Current user count is {}.", userRepository.count());
+		logger.info("Saving users. Current user count is {}.", userRepository.count());
 		User shubham = new User("Shubham", 2000);
 		User pankaj = new User("Pankaj", 29000);
 		User lewis = new User("Lewis", 550);
@@ -37,6 +37,6 @@ public class Application implements CommandLineRunner {
 		userRepository.save(shubham);
 		userRepository.save(pankaj);
 		userRepository.save(lewis);
-		LOG.info("Done saving users. Data: {}.", userRepository.findAll());
+		logger.info("Done saving users. Data: {}.", userRepository.findAll());
 	}
 }
